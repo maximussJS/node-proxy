@@ -6,13 +6,12 @@ import (
 	"json-rpc-node-proxy/pkg/cache"
 	cache_redis "json-rpc-node-proxy/pkg/cache/drivers"
 	"json-rpc-node-proxy/pkg/config"
+	"json-rpc-node-proxy/pkg/env"
 	"json-rpc-node-proxy/pkg/key_generator"
 	"json-rpc-node-proxy/pkg/logger"
 	redis_cli "json-rpc-node-proxy/pkg/redis"
 	"json-rpc-node-proxy/pkg/worker_pool"
 )
-
-type Environment int
 
 type Dependency struct {
 	Constructor interface{}
@@ -20,18 +19,13 @@ type Dependency struct {
 	Token       string
 }
 
-const (
-	EnvProd Environment = iota
-	EnvTest
-)
-
-func BuildContainer(env Environment) *dig.Container {
+func BuildContainer(environment env.Environment) *dig.Container {
 	dryRun := false
-	if env == EnvTest {
+	if environment == env.EnvTest {
 		dryRun = true
 	}
 
-	deps := getDependencies()
+	deps := getDependencies(environment)
 
 	container := dig.New(dig.DryRun(dryRun))
 
@@ -50,12 +44,14 @@ func AppendDependencies(container *dig.Container, dependencies []Dependency) *di
 	return container
 }
 
-func getDependencies() []Dependency {
+func getDependencies(env env.Environment) []Dependency {
 	return []Dependency{
 		{
-			Constructor: logger.NewLogger,
-			Interface:   new(logger.ILogger),
-			Token:       "Logger",
+			Constructor: func() *logger.Logger {
+				return logger.NewLogger(env)
+			},
+			Interface: new(logger.ILogger),
+			Token:     "Logger",
 		},
 		{
 			Constructor: config.SingletonCacheConfig,

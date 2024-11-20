@@ -10,7 +10,7 @@ import (
 	"json-rpc-node-proxy/internal/models"
 	"json-rpc-node-proxy/internal/services"
 	"json-rpc-node-proxy/pkg/config"
-	responses2 "json-rpc-node-proxy/pkg/utils/responses"
+	"json-rpc-node-proxy/pkg/utils/responses"
 	"json-rpc-node-proxy/pkg/worker_pool"
 	"log"
 	"net/http"
@@ -51,7 +51,7 @@ func (h *JsonRpcHandler) Handle(w http.ResponseWriter, r *http.Request) {
 	h.pool.Submit(func() (*models.JsonRpcResponse, error) {
 		select {
 		case <-ctx.Done():
-			responses2.RequestTimeout(w)
+			responses.RequestTimeout(w)
 		default:
 			h.processRequest(w, r.WithContext(ctx))
 		}
@@ -70,7 +70,7 @@ func (h *JsonRpcHandler) processRequest(w http.ResponseWriter, r *http.Request) 
 	err := decoder.Decode(&request)
 
 	if err != nil {
-		responses2.BadRequest(w, fmt.Errorf(`{"error": "Error unmarshalling JSON: %v"}`, err.Error()))
+		responses.BadRequest(w, fmt.Errorf(`{"error": "Error unmarshalling JSON: %v"}`, err.Error()))
 		return
 	}
 
@@ -79,24 +79,24 @@ func (h *JsonRpcHandler) processRequest(w http.ResponseWriter, r *http.Request) 
 
 		if err != nil {
 			log.Printf("Error marshalling error response: %v", err)
-			responses2.InternalServerError(w)
+			responses.InternalServerError(w)
 			return
 		}
 
-		responses2.Success(w, responseBytes)
+		responses.Success(w, responseBytes)
 		return
 	}
 
 	select {
 	case <-r.Context().Done():
-		responses2.RequestTimeout(w)
+		responses.RequestTimeout(w)
 		return
 	default:
 		response, err := h.proxy.HandleRequest(r.Context(), &request)
 
 		if err != nil {
 			if errors.Is(err, custom_errors.RequestTimeoutError) {
-				responses2.RequestTimeout(w)
+				responses.RequestTimeout(w)
 				return
 			}
 
@@ -106,17 +106,17 @@ func (h *JsonRpcHandler) processRequest(w http.ResponseWriter, r *http.Request) 
 
 				if err != nil {
 					log.Printf("Error marshalling error response: %v", err)
-					responses2.InternalServerError(w)
+					responses.InternalServerError(w)
 					return
 				}
 
-				responses2.Success(w, responseBytes)
+				responses.Success(w, responseBytes)
 				return
 			}
 
 			log.Printf("Unhandled error while processing request: %v", err)
 
-			responses2.InternalServerError(w)
+			responses.InternalServerError(w)
 			return
 		}
 
@@ -124,10 +124,10 @@ func (h *JsonRpcHandler) processRequest(w http.ResponseWriter, r *http.Request) 
 
 		if err != nil {
 			log.Printf("Error marshalling response: %v", err)
-			responses2.InternalServerError(w)
+			responses.InternalServerError(w)
 			return
 		}
 
-		responses2.Success(w, bytes)
+		responses.Success(w, bytes)
 	}
 }
