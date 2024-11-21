@@ -3,7 +3,8 @@ package cache
 import (
 	"context"
 	"go.uber.org/dig"
-	"json-rpc-node-proxy/internal/common/custom_errors"
+	"json-rpc-node-proxy/pkg/custom_errors"
+	utils_ctx "json-rpc-node-proxy/pkg/utils/ctx"
 )
 
 type IDriver interface {
@@ -12,8 +13,8 @@ type IDriver interface {
 }
 
 type ICache interface {
-	Get(ctx context.Context, key string) (string, error)
-	Set(ctx context.Context, key, data string) error
+	Get(ctx context.Context) (string, error)
+	Set(ctx context.Context, data string) error
 }
 
 type Cache struct {
@@ -32,20 +33,32 @@ func NewCache(deps CacheDependencies) *Cache {
 	}
 }
 
-func (c *Cache) Get(ctx context.Context, key string) (string, error) {
+func (c *Cache) Get(ctx context.Context) (string, error) {
 	select {
 	case <-ctx.Done():
 		return "", custom_errors.RequestTimeoutError
 	default:
-		return c.driver.Get(ctx, key)
+		cacheKey, err := utils_ctx.GetCacheKeyFromContext(ctx)
+
+		if err != nil {
+			return "", err
+		}
+
+		return c.driver.Get(ctx, cacheKey)
 	}
 }
 
-func (c *Cache) Set(ctx context.Context, key, data string) error {
+func (c *Cache) Set(ctx context.Context, data string) error {
 	select {
 	case <-ctx.Done():
 		return custom_errors.RequestTimeoutError
 	default:
-		return c.driver.Set(ctx, key, data)
+		cacheKey, err := utils_ctx.GetCacheKeyFromContext(ctx)
+
+		if err != nil {
+			return err
+		}
+
+		return c.driver.Set(ctx, cacheKey, data)
 	}
 }

@@ -31,7 +31,7 @@ func NewJsonRpcResponseFromString(str string) *JsonRpcResponse {
 	return &response
 }
 
-func (r *JsonRpcResponse) IsCacheable() bool {
+func (r *JsonRpcResponse) IsNotError() bool {
 	return r.Error == nil
 }
 

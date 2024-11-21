@@ -3,7 +3,7 @@ package key_generator
 import (
 	"encoding/json"
 	"fmt"
-	"json-rpc-node-proxy/internal/common/custom_errors"
+	"json-rpc-node-proxy/pkg/custom_errors"
 	"log"
 	"strings"
 )

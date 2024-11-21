@@ -6,10 +6,10 @@ import (
 	"errors"
 	"fmt"
 	"go.uber.org/dig"
-	"json-rpc-node-proxy/internal/common/custom_errors"
 	"json-rpc-node-proxy/internal/models"
 	"json-rpc-node-proxy/internal/services"
 	"json-rpc-node-proxy/pkg/config"
+	"json-rpc-node-proxy/pkg/custom_errors"
 	"json-rpc-node-proxy/pkg/utils/responses"
 	"json-rpc-node-proxy/pkg/worker_pool"
 	"log"
@@ -25,14 +25,14 @@ type JsonRpcHandler struct {
 	requestTimeout     time.Duration
 	maxRequestBodySize int64
 	pool               worker_pool.IWorkerPool[*models.JsonRpcResponse]
-	proxy              services.IProxyService
+	jsonRpc            services.IJsonRpcService
 }
 
 type JsonRpcRequestHandlerDependencies struct {
 	dig.In
-	Cfg   config.IHttpServerConfig                         `name:"HttpServerConfig"`
-	Pool  worker_pool.IWorkerPool[*models.JsonRpcResponse] `name:"WorkerPool"`
-	Proxy services.IProxyService                           `name:"ProxyService"`
+	Cfg     config.IHttpServerConfig                         `name:"HttpServerConfig"`
+	Pool    worker_pool.IWorkerPool[*models.JsonRpcResponse] `name:"WorkerPool"`
+	JsonRpc services.IJsonRpcService                         `name:"JsonRpcService"`
 }
 
 func NewJsonRpcHandler(deps JsonRpcRequestHandlerDependencies) *JsonRpcHandler {
@@ -40,7 +40,7 @@ func NewJsonRpcHandler(deps JsonRpcRequestHandlerDependencies) *JsonRpcHandler {
 		requestTimeout:     deps.Cfg.GetTimeout(),
 		maxRequestBodySize: deps.Cfg.GetMaxRequestBodySize(),
 		pool:               deps.Pool,
-		proxy:              deps.Proxy,
+		jsonRpc:            deps.JsonRpc,
 	}
 }
 
@@ -92,7 +92,7 @@ func (h *JsonRpcHandler) processRequest(w http.ResponseWriter, r *http.Request) 
 		responses.RequestTimeout(w)
 		return
 	default:
-		response, err := h.proxy.HandleRequest(r.Context(), &request)
+		response, err := h.jsonRpc.HandleRequest(r.Context(), &request)
 
 		if err != nil {
 			if errors.Is(err, custom_errors.RequestTimeoutError) {

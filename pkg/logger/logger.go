@@ -21,16 +21,15 @@ type Logger struct {
 }
 
 func NewLogger(environment env.Environment) *Logger {
-
 	logger := logrus.New()
 
 	logger.SetFormatter(&logrus.JSONFormatter{})
 	logger.SetOutput(os.Stdout)
 
 	if environment == env.EnvTest {
-		logger.SetLevel(logrus.DebugLevel)
+		logger.SetLevel(logrus.TraceLevel)
 	} else {
-		logger.SetLevel(logrus.InfoLevel)
+		logger.SetLevel(logrus.DebugLevel)
 	}
 
 	return &Logger{

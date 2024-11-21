@@ -6,17 +6,19 @@ import (
 )
 
 var (
-	cacheDriverGetErrorCode                = -32000
-	cacheDriverSetErrorCode                = -32001
-	keyGenerationErrorCode                 = -32002
-	nodeRequestJsonMarshalErrorCode        = -32003
-	nodeRequestNewRequestErrorCode         = -32004
-	nodeRequestClientDoErrorCode           = -32005
-	nodeRequestReadResponseBodyErrorCode   = -32006
-	nodeResponseResultMarshalErrorCode     = -32007
-	proxyFromCacheResultUnmarshalErrorCode = -32008
-	nodeResultMarshalErrorCode             = -32009
-	cacheDriverSetExpireErrorCode          = -32010
+	cacheDriverGetErrorCode              = -32000
+	cacheDriverSetErrorCode              = -32001
+	keyGenerationErrorCode               = -32002
+	nodeRequestJsonMarshalErrorCode      = -32003
+	nodeRequestNewRequestErrorCode       = -32004
+	nodeRequestClientDoErrorCode         = -32005
+	nodeRequestReadResponseBodyErrorCode = -32006
+	nodeResponseResultMarshalErrorCode   = -32007
+	cacheResultUnmarshalErrorCode        = -32008
+	nodeResultMarshalErrorCode           = -32009
+	cacheDriverSetExpireErrorCode        = -32010
+	ctxCacheKeyEmptyErrorCode            = -32011
+	ctxJsonRpcRequestEmptyError          = -32012
 )
 
 func NewValidationError(err error) *models.RpcError {
@@ -45,12 +47,17 @@ func CreateJsonRpcError(err error) *models.RpcError {
 		return createJsonRpcRequestProcessingError(nodeRequestReadResponseBodyErrorCode)
 	case NodeResponseResultMarshalError:
 		return createJsonRpcRequestProcessingError(nodeResponseResultMarshalErrorCode)
-	case ProxyFromCacheResultUnmarshalError:
-		return createJsonRpcRequestProcessingError(proxyFromCacheResultUnmarshalErrorCode)
+	case CacheResultUnmarshalError:
+		return createJsonRpcRequestProcessingError(cacheResultUnmarshalErrorCode)
 	case NodeResultMarshalError:
 		return createJsonRpcRequestProcessingError(nodeResultMarshalErrorCode)
 	case CacheDriverSetExpireError:
 		return createJsonRpcRequestProcessingError(cacheDriverSetExpireErrorCode)
+	case CtxCacheKeyEmptyError:
+		return createJsonRpcRequestProcessingError(ctxCacheKeyEmptyErrorCode)
+	case CtxJsonRpcRequestEmptyError:
+		return createJsonRpcRequestProcessingError(ctxJsonRpcRequestEmptyError)
+
 	default:
 		panic(fmt.Errorf("CreateJsonRpcError Unknown error type %v", err))
 	}

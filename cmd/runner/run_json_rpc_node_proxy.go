@@ -24,9 +24,9 @@ func addAppSpecificDependencies(container *dig.Container) *dig.Container {
 			Token:       "NodeService",
 		},
 		{
-			Constructor: services.NewProxyService,
-			Interface:   new(services.IProxyService),
-			Token:       "ProxyService",
+			Constructor: services.NewJsonRpcService,
+			Interface:   new(services.IJsonRpcService),
+			Token:       "JsonRpcService",
 		},
 		{
 			Constructor: handlers.NewJsonRpcHandler,

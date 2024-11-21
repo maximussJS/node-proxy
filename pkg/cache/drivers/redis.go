@@ -4,8 +4,8 @@ import (
 	"context"
 	"github.com/redis/go-redis/v9"
 	"go.uber.org/dig"
-	"json-rpc-node-proxy/internal/common/custom_errors"
 	"json-rpc-node-proxy/pkg/config"
+	"json-rpc-node-proxy/pkg/custom_errors"
 	"log"
 	"time"
 )

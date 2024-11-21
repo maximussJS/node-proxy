@@ -2,6 +2,7 @@ package models
 
 import (
 	"errors"
+	"fmt"
 	"github.com/go-playground/validator/v10"
 )
 
@@ -43,6 +44,10 @@ func (r *JsonRpcRequest) CopyWithNewId(id string) *JsonRpcRequest {
 		Params:  r.Params,
 		Id:      id,
 	}
+}
+
+func (r *JsonRpcRequest) String() string {
+	return fmt.Sprintf("JsonRpcRequest{Jsonrpc: %s, Method: %s, Params: %v, Id: %s}", r.Jsonrpc, r.Method, r.Params, r.Id)
 }
 
 func (r *JsonRpcRequest) IsCacheable() bool {
