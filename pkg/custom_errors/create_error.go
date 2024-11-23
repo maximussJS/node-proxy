@@ -19,6 +19,7 @@ var (
 	cacheDriverSetExpireErrorCode        = -32010
 	ctxCacheKeyEmptyErrorCode            = -32011
 	ctxJsonRpcRequestEmptyError          = -32012
+	availableNodesNotFoundErrorCode      = -32013
 )
 
 func NewValidationError(err error) *models.RpcError {
@@ -57,6 +58,8 @@ func CreateJsonRpcError(err error) *models.RpcError {
 		return createJsonRpcRequestProcessingError(ctxCacheKeyEmptyErrorCode)
 	case CtxJsonRpcRequestEmptyError:
 		return createJsonRpcRequestProcessingError(ctxJsonRpcRequestEmptyError)
+	case AvailableNodeNotFoundError:
+		return createJsonRpcRequestProcessingError(availableNodesNotFoundErrorCode)
 
 	default:
 		panic(fmt.Errorf("CreateJsonRpcError Unknown error type %v", err))

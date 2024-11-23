@@ -1,23 +1,15 @@
 package config
 
-import "time"
-
 type INodeConfig interface {
-	GetUrl() string
-	GetTimeout() time.Duration
+	GetConfigPath() string
 }
 
 type NodeConfig struct {
-	Url     string
-	Timeout int
+	configPath string
 }
 
-func (nc *NodeConfig) GetUrl() string {
-	return nc.Url
-}
-
-func (nc *NodeConfig) GetTimeout() time.Duration {
-	return time.Duration(nc.Timeout) * time.Second
+func (n *NodeConfig) GetConfigPath() string {
+	return n.configPath
 }
 
 var nodeConfig *NodeConfig
@@ -27,13 +19,10 @@ func init() {
 }
 
 func initNodeConfig() {
-	url := EnvRequiredString("NODE_URL")
-
-	timeout := EnvOptionalInt("NODE_TIMEOUT", 30)
+	configPath := EnvRequiredString("NODE_CONFIG_PATH")
 
 	nodeConfig = &NodeConfig{
-		Url:     url,
-		Timeout: timeout,
+		configPath: configPath,
 	}
 }
 

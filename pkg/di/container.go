@@ -2,7 +2,6 @@ package di
 
 import (
 	"go.uber.org/dig"
-	"json-rpc-node-proxy/internal/models"
 	"json-rpc-node-proxy/pkg/cache"
 	cache_redis "json-rpc-node-proxy/pkg/cache/drivers"
 	"json-rpc-node-proxy/pkg/config"
@@ -10,7 +9,6 @@ import (
 	"json-rpc-node-proxy/pkg/key_generator"
 	"json-rpc-node-proxy/pkg/logger"
 	redis_cli "json-rpc-node-proxy/pkg/redis"
-	"json-rpc-node-proxy/pkg/worker_pool"
 )
 
 type Dependency struct {
@@ -74,11 +72,6 @@ func getDependencies(env env.Environment) []Dependency {
 			Token:       "RedisConfig",
 		},
 		{
-			Constructor: config.SingletonWorkerPoolConfig,
-			Interface:   new(config.IWorkerPoolConfig),
-			Token:       "WorkerPoolConfig",
-		},
-		{
 			Constructor: redis_cli.CreateClient,
 			Interface:   nil,
 			Token:       "RedisClient",
@@ -97,11 +90,6 @@ func getDependencies(env env.Environment) []Dependency {
 			Constructor: cache.NewCache,
 			Interface:   new(cache.ICache),
 			Token:       "Cache",
-		},
-		{
-			Constructor: worker_pool.NewWorkerPool[*models.JsonRpcResponse],
-			Interface:   new(worker_pool.IWorkerPool[*models.JsonRpcResponse]),
-			Token:       "WorkerPool",
 		},
 	}
 }

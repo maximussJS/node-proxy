@@ -19,6 +19,16 @@ func RunApp(env env.Environment) error {
 func addAppSpecificDependencies(container *dig.Container) *dig.Container {
 	deps := []di.Dependency{
 		{
+			Constructor: services.NewNodeConfigService,
+			Interface:   new(services.INodeConfigService),
+			Token:       "NodeConfigService",
+		},
+		{
+			Constructor: services.NewNodeManagerService,
+			Interface:   new(services.INodeManagerService),
+			Token:       "NodeManagerService",
+		},
+		{
 			Constructor: services.NewNodeService,
 			Interface:   new(services.INodeService),
 			Token:       "NodeService",

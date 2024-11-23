@@ -26,4 +26,5 @@ var (
 	CacheDriverSetExpireError        = errors.New("cache driver set expire error")
 	CtxCacheKeyEmptyError            = errors.New("ctx cache key empty error")
 	CtxJsonRpcRequestEmptyError      = errors.New("ctx json rpc request empty error")
+	AvailableNodeNotFoundError       = errors.New("available node not found error")
 )

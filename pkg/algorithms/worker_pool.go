@@ -1,9 +1,7 @@
-package worker_pool
+package algorithms
 
 import (
 	"github.com/alitto/pond/v2"
-	"go.uber.org/dig"
-	"json-rpc-node-proxy/pkg/config"
 	"log"
 )
 
@@ -17,15 +15,7 @@ type WorkerPool[T any] struct {
 	pool pond.ResultPool[T]
 }
 
-type WorkerPoolDependencies struct {
-	dig.In
-
-	Cfg config.IWorkerPoolConfig `name:"WorkerPoolConfig"`
-}
-
-func NewWorkerPool[T any](deps WorkerPoolDependencies) *WorkerPool[T] {
-	maxWorkers := deps.Cfg.GetMaxWorkers()
-
+func NewWorkerPool[T any](maxWorkers int) *WorkerPool[T] {
 	if maxWorkers <= 0 {
 		log.Fatalf("Invalid maxWorkers value: %d", maxWorkers)
 	}
