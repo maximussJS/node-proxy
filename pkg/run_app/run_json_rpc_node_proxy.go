@@ -1,4 +1,4 @@
-package runner
+package run_app
 
 import (
 	"go.uber.org/dig"

@@ -18,14 +18,14 @@ type Redis struct {
 type RedisDependencies struct {
 	dig.In
 
-	RedisClient *redis.Client       `name:"RedisClient"`
-	RedisConfig config.IRedisConfig `name:"RedisConfig"`
+	RedisClient *redis.Client  `name:"RedisClient"`
+	Config      config.IConfig `name:"Config"`
 }
 
 func NewRedis(deps RedisDependencies) *Redis {
 	return &Redis{
 		client:     deps.RedisClient,
-		defaultTTl: deps.RedisConfig.GetDefaultTTl(),
+		defaultTTl: deps.Config.GetRedisDefaultTTl(),
 	}
 }
 

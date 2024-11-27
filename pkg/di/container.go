@@ -52,24 +52,9 @@ func getDependencies(env env.Environment) []Dependency {
 			Token:     "Logger",
 		},
 		{
-			Constructor: config.SingletonCacheConfig,
-			Interface:   new(config.ICacheConfig),
-			Token:       "CacheConfig",
-		},
-		{
-			Constructor: config.SingletonHttpServerConfig,
-			Interface:   new(config.IHttpServerConfig),
-			Token:       "HttpServerConfig",
-		},
-		{
-			Constructor: config.SingletonNodeConfig,
-			Interface:   new(config.INodeConfig),
-			Token:       "NodeConfig",
-		},
-		{
-			Constructor: config.SingletonRedisConfig,
-			Interface:   new(config.IRedisConfig),
-			Token:       "RedisConfig",
+			Constructor: config.SingletonConfig,
+			Interface:   new(config.IConfig),
+			Token:       "Config",
 		},
 		{
 			Constructor: redis_cli.CreateClient,

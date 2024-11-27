@@ -8,11 +8,11 @@ import (
 
 type CreateRedisClientDependencies struct {
 	dig.In
-	Cfg config.IRedisConfig `name:"RedisConfig"`
+	Cfg config.IConfig `name:"Config"`
 }
 
 func CreateClient(deps CreateRedisClientDependencies) *redis.Client {
-	opts, err := redis.ParseURL(deps.Cfg.GetUrl())
+	opts, err := redis.ParseURL(deps.Cfg.GetRedisUrl())
 	if err != nil {
 		panic(err)
 	}

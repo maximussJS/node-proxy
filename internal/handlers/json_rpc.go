@@ -31,15 +31,15 @@ type JsonRpcHandler struct {
 type JsonRpcRequestHandlerDependencies struct {
 	dig.In
 	Logger  logger.ILogger           `name:"Logger"`
-	Cfg     config.IHttpServerConfig `name:"HttpServerConfig"`
+	Cfg     config.IConfig           `name:"Config"`
 	JsonRpc services.IJsonRpcService `name:"JsonRpcService"`
 }
 
 func NewJsonRpcHandler(deps JsonRpcRequestHandlerDependencies) *JsonRpcHandler {
 	return &JsonRpcHandler{
 		logger:             deps.Logger,
-		requestTimeout:     deps.Cfg.GetTimeout(),
-		maxRequestBodySize: deps.Cfg.GetMaxRequestBodySize(),
+		requestTimeout:     deps.Cfg.GetHttpRequestTimeout(),
+		maxRequestBodySize: deps.Cfg.GetHttpMaxRequestBodySize(),
 		jsonRpc:            deps.JsonRpc,
 	}
 }

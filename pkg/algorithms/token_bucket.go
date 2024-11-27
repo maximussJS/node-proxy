@@ -2,7 +2,6 @@ package algorithms
 
 import (
 	"context"
-	"fmt"
 	"time"
 )
 
@@ -22,7 +21,6 @@ func NewTokenBucket(count int64, rate int64) *TokenBucket {
 		tokens <- struct{}{}
 	}
 
-	fmt.Printf("Initialized TokenBucket with count %v and token rateMs %v\n", len(tokens), rate)
 	everyMs := 1 / float64(rate) * 1000
 	return &TokenBucket{
 		count:  count,
@@ -49,4 +47,9 @@ func (tb *TokenBucket) Start(ctx context.Context) {
 
 func (tb *TokenBucket) Wait() {
 	<-tb.tokens
+}
+
+func (tb *TokenBucket) Stop() {
+	tb.ticker.Stop()
+	close(tb.tokens)
 }

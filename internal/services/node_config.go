@@ -18,8 +18,8 @@ type INodeConfigService interface {
 type NodeConfigServiceDependencies struct {
 	dig.In
 
-	Logger logger.ILogger     `name:"Logger"`
-	Cfg    config.INodeConfig `name:"NodeConfig"`
+	Logger logger.ILogger `name:"Logger"`
+	Cfg    config.IConfig `name:"Config"`
 }
 
 type NodeConfigService struct {
@@ -27,7 +27,7 @@ type NodeConfigService struct {
 }
 
 func NewNodeConfigService(deps NodeConfigServiceDependencies) *NodeConfigService {
-	configPath := deps.Cfg.GetConfigPath()
+	configPath := deps.Cfg.GetNodeConfigPath()
 
 	if _, err := os.Stat(configPath); errors.Is(err, os.ErrNotExist) {
 		deps.Logger.Error(fmt.Sprintf("Config file does not exist: %s", configPath))

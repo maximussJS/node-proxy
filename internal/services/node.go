@@ -8,7 +8,6 @@ import (
 	"go.uber.org/dig"
 	"io/ioutil"
 	"json-rpc-node-proxy/internal/models"
-	"json-rpc-node-proxy/pkg/config"
 	"json-rpc-node-proxy/pkg/custom_errors"
 	"json-rpc-node-proxy/pkg/logger"
 	utils_ctx "json-rpc-node-proxy/pkg/utils/ctx"
@@ -33,7 +32,6 @@ type NodeServiceDependencies struct {
 
 	NodeManagerService INodeManagerService `name:"NodeManagerService"`
 	Logger             logger.ILogger      `name:"Logger"`
-	Cfg                config.INodeConfig  `name:"NodeConfig"`
 }
 
 func NewNodeService(deps NodeServiceDependencies) *NodeService {
