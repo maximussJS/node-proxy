@@ -25,7 +25,7 @@ type RedisDependencies struct {
 func NewRedis(deps RedisDependencies) *Redis {
 	return &Redis{
 		client:     deps.RedisClient,
-		defaultTTl: deps.Config.GetRedisDefaultTTl(),
+		defaultTTl: deps.Config.GetRedisDefaultTTL(),
 	}
 }
 

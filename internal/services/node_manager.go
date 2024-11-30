@@ -3,6 +3,7 @@ package services
 import (
 	"go.uber.org/dig"
 	"json-rpc-node-proxy/internal/models"
+	"json-rpc-node-proxy/pkg/config"
 	"json-rpc-node-proxy/pkg/logger"
 )
 
@@ -18,12 +19,12 @@ type NodeManagerService struct {
 type NodeManagerServiceDependencies struct {
 	dig.In
 
-	NodeConfigService INodeConfigService `name:"NodeConfigService"`
-	Logger            logger.ILogger     `name:"Logger"`
+	Cfg    config.IConfig `name:"Config"`
+	Logger logger.ILogger `name:"Logger"`
 }
 
 func NewNodeManagerService(deps NodeManagerServiceDependencies) *NodeManagerService {
-	nodes := deps.NodeConfigService.GetNodes()
+	nodes := deps.Cfg.GetNodes()
 
 	rateLimitedNodes := make([]*models.RateLimitedNode, len(nodes))
 

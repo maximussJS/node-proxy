@@ -2,31 +2,32 @@ package models
 
 import (
 	"json-rpc-node-proxy/pkg/algorithms"
+	"json-rpc-node-proxy/pkg/config"
 	"time"
 )
 
 type RateLimitedNode struct {
-	node   Node
+	node   config.NodeConfig
 	Bucket *algorithms.TokenBucket
 }
 
-func NewRateLimitedNode(node Node) *RateLimitedNode {
+func NewRateLimitedNode(node config.NodeConfig) *RateLimitedNode {
 	return &RateLimitedNode{
 		node:   node,
-		Bucket: algorithms.NewTokenBucket(node.TokenBucketCapacity, node.Rps),
+		Bucket: algorithms.NewTokenBucket(node.GetTokenBucketCapacity(), node.GetRps()),
 	}
 }
 
 func (n *RateLimitedNode) GetUrl() string {
-	return n.node.Url
+	return n.node.GetUrl()
 }
 
 func (n *RateLimitedNode) GetName() string {
-	return n.node.Name
+	return n.node.GetName()
 }
 
 func (n *RateLimitedNode) GetTimeout() time.Duration {
-	return time.Duration(n.node.Timeout) * time.Second
+	return time.Duration(n.node.GetTimeout()) * time.Second
 }
 
 func (n *RateLimitedNode) WaitForExecute() {
