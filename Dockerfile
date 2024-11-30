@@ -5,7 +5,7 @@ WORKDIR /build
 ADD go.mod .
 COPY . .
 
-RUN go build -o main cmd/ethereum/main.go
+RUN go build -o main cmd/main.go
 
 FROM alpine
 

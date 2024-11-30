@@ -1,4 +1,4 @@
-package run_app
+package server
 
 import (
 	"go.uber.org/dig"
@@ -6,14 +6,13 @@ import (
 	"json-rpc-node-proxy/internal/services"
 	"json-rpc-node-proxy/pkg/di"
 	"json-rpc-node-proxy/pkg/env"
-	"json-rpc-node-proxy/pkg/server"
 )
 
-func RunApp(env env.Environment) error {
+func Run(env env.Environment) error {
 	c := di.BuildContainer(env)
 	c = addAppSpecificDependencies(c)
 
-	return c.Invoke(server.StartHttpServer)
+	return c.Invoke(StartHttpServer)
 }
 
 func addAppSpecificDependencies(container *dig.Container) *dig.Container {

@@ -27,9 +27,9 @@ func NewLogger(environment env.Environment) *Logger {
 	logger.SetOutput(os.Stdout)
 
 	if environment == env.EnvTest {
-		logger.SetLevel(logrus.TraceLevel)
-	} else {
 		logger.SetLevel(logrus.DebugLevel)
+	} else {
+		logger.SetLevel(logrus.InfoLevel)
 	}
 
 	return &Logger{

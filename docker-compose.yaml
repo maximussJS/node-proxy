@@ -16,5 +16,15 @@ services:
         target: /data
         source: redis_volume
 
-
-
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: maximussxgod/json-rpc-node-proxy:v3
+    container_name: json-rpc-node-proxy
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./config.yaml:/build/config.yaml
+    depends_on:
+      - redis
